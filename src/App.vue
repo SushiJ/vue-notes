@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import NavBar from '@/components/NavBar.vue';
+import NavBar from "@/components/NavBar.vue";
 </script>
 
-<template >
+<template>
   <NavBar />
-  <RouterView class="max-w-7xl mx-auto p-2"/>
+  <RouterView class="max-w-7xl mx-auto p-2" />
 </template>

@@ -1,11 +1,8 @@
 <script setup lang="ts">
-import CardList from "@/components/CardList.vue"
-import Textarea from "@/components/Textarea.vue";
+import Notes from "@/components/Notes.vue";
 </script>
 <template>
   <div class="w-full mx-auto">
-    <Textarea />
-    <div class="divider"/>
-    <CardList />
+    <Notes />
   </div>
 </template>
