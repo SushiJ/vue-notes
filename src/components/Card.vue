@@ -2,6 +2,7 @@
 import { useNotesStore } from "@/store";
 
 interface Props {
+  idx: number;
   id: string;
   createdAt: string;
   title: string;
@@ -20,6 +21,7 @@ function handleDelete(id: string) {
     <div class="card-body">
       <div class="items-center">
         <p class="card-title">
+          <span>{{ "#" + props.idx }}</span>
           {{ props.title }}
         </p>
         <div class="flex items-center text-sm">
@@ -41,6 +43,7 @@ function handleDelete(id: string) {
       <div class="card">
         {{ props.content }}
       </div>
+      <p>{{ props.id }}</p>
     </div>
     <div class="card-actions justify-end px-4">
       <button class="btn btn-accent btn-outline shadow-xl">Edit</button>

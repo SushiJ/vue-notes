@@ -1,5 +1,3 @@
 <template>
-  <div class="pt-2">
-    Stats
-  </div>
+  <div class="pt-2">Stats</div>
 </template>
