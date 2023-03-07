@@ -1,17 +1,18 @@
 <script setup lang="ts">
+import { useNotesStore } from "@/store";
+
 interface Props {
-  unq: number;
   id: string;
+  createdAt: string;
   title: string;
   content: string;
 }
-const emit = defineEmits<{
-  (e: "delete", id: number): void;
-}>();
-const props = defineProps<Props>();
 
-function handleDelete() {
-  emit("delete", props.unq);
+const props = defineProps<Props>();
+const store = useNotesStore();
+
+function handleDelete(id: string) {
+  store.deleteNote(id);
 }
 </script>
 <template>
@@ -19,14 +20,13 @@ function handleDelete() {
     <div class="card-body">
       <div class="items-center">
         <p class="card-title">
-          <span>{{ props.unq }}</span
-          >{{ props.title }}
+          {{ props.title }}
         </p>
         <div class="flex items-center text-sm">
           <span className="mx-2">  </span>
-          <time class="text-accent" :datetime="props.id">
+          <time class="text-accent" :datetime="props.createdAt">
             {{
-              new Date(props.id).toLocaleString("en-IN", {
+              new Date(props.createdAt).toLocaleString("en-IN", {
                 day: "numeric",
                 month: "short",
                 year: "numeric",
@@ -44,7 +44,10 @@ function handleDelete() {
     </div>
     <div class="card-actions justify-end px-4">
       <button class="btn btn-accent btn-outline shadow-xl">Edit</button>
-      <button @click="handleDelete" class="btn btn-error btn-outline shadow-xl">
+      <button
+        @click.prevent="handleDelete(props.id)"
+        class="btn btn-error btn-outline shadow-xl"
+      >
         Delete
       </button>
     </div>

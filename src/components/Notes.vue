@@ -1,9 +1,10 @@
 <script setup lang="ts">
-import { ref, type Ref, computed } from "vue";
+import { ref } from "vue";
 import Card from "@/components/Card.vue";
+import { useNotesStore } from "@/store";
 
-let titleText: Ref<string> = ref("");
-let contentText: Ref<string> = ref("");
+let titleText = ref<string>("");
+let contentText = ref<string>("");
 
 function handleCancelClick() {
   titleText.value = "";
@@ -11,43 +12,10 @@ function handleCancelClick() {
 }
 
 function handleSubmit() {
-  notes.value.push({
-    unq: 4,
-    id: new Date().toISOString(),
-    title: titleText.value,
-    content: contentText.value,
-  });
   handleCancelClick();
+  return;
 }
-
-let notes = ref([
-  {
-    unq: 1,
-    id: "2023-02-19T10:34:31.233Z",
-    title: "Test title 1",
-    content:
-      "Lorem ipsum dolor sit amet, qui minim labore adipisicing minim sint cillum sint consectetur cupidatat.",
-  },
-  {
-    unq: 2,
-    id: new Date().toISOString(),
-    title: "Test title 2",
-    content:
-      "qui minim labore adipisicing minim sint cillum sint consectetur cupidatat.",
-  },
-  {
-    unq: 3,
-    id: new Date().toISOString(),
-    title: "Test title 3",
-    content:
-      "qui minim labore adipisicing minim sint cillum sint consectetur cupidatat.",
-  },
-]);
-
-function handleDeleteEvent(id: number) {
-  notes.value = notes.value.filter((note) => note.unq !== id);
-  console.log(id);
-}
+const store = useNotesStore();
 </script>
 <template>
   <div class="max-w-3xl w-full mx-auto">
@@ -80,15 +48,4 @@ function handleDeleteEvent(id: number) {
     </div>
   </div>
   <div class="divider" />
-  <div class="flex flex-wrap gap-4">
-    <div v-for="note in notes">
-      <Card
-        @delete="handleDeleteEvent"
-        :unq="note.unq"
-        :id="note.id"
-        :title="note.title"
-        :content="note.content"
-      />
-    </div>
-  </div>
 </template>
