@@ -1,11 +1,15 @@
 import { defineStore } from "pinia";
 import { v4 as uuid } from "uuid";
-interface Note {
-  id: string;
-  createdAt: string;
+
+interface Data {
   title: string;
   content: string;
 }
+interface Note extends Data {
+  id: string;
+  createdAt: string;
+}
+
 const initialValue: Note[] = [
   {
     id: uuid(),
@@ -30,6 +34,15 @@ export const useNotesStore = defineStore("storeNotes", {
     };
   },
   actions: {
+    addNote(data: Data) {
+      const note = {
+        id: uuid(),
+        createdAt: new Date().toISOString(),
+        title: data.title,
+        content: data.content,
+      };
+      this.notes = [...this.notes, note];
+    },
     deleteNote(id: string) {
       this.notes = this.notes.filter((note) => note.id !== id);
     },

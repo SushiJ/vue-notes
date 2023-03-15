@@ -17,11 +17,11 @@ function handleDelete(id: string) {
 }
 </script>
 <template>
-  <div class="card w-96 shadow-2xl py-4 h-96">
+  <div class="py-4 w-96 h-auto shadow-2xl card">
     <div class="card-body">
       <div class="items-center">
-        <p class="card-title">
-          <span>{{ "#" + props.idx }}</span>
+        <p class="text-xl card-title">
+          <span class="text-sm text-accent">{{ "#" + props.idx }}</span>
           {{ props.title }}
         </p>
         <div class="flex items-center text-sm">
@@ -40,16 +40,15 @@ function handleDelete(id: string) {
         </div>
       </div>
       <div class="divider" />
-      <div class="card">
+      <div class="break-all card">
         {{ props.content }}
       </div>
-      <p>{{ props.id }}</p>
     </div>
-    <div class="card-actions justify-end px-4">
-      <button class="btn btn-accent btn-outline shadow-xl">Edit</button>
+    <div class="justify-end px-4 card-actions">
+      <button class="shadow-xl btn btn-accent btn-outline">Edit</button>
       <button
         @click.prevent="handleDelete(props.id)"
-        class="btn btn-error btn-outline shadow-xl"
+        class="shadow-xl btn btn-error btn-outline"
       >
         Delete
       </button>

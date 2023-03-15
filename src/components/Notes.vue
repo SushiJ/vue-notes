@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref, watch } from "vue";
 import Card from "@/components/Card.vue";
 import { useNotesStore } from "@/store";
 
@@ -10,30 +10,42 @@ function handleCancelClick() {
   titleText.value = "";
   contentText.value = "";
 }
+const store = useNotesStore();
 
 function handleSubmit() {
+  const noteData = {
+    title: titleText.value,
+    content: contentText.value,
+  };
+  store.addNote(noteData);
   handleCancelClick();
-  return;
 }
-const store = useNotesStore();
+
+const contentLength = ref<number>(0);
+
+watch(contentText, (oldContent) => {
+  contentLength.value = oldContent.length;
+});
 </script>
 <template>
-  <div class="max-w-3xl w-full mx-auto">
+  <div class="mx-auto w-full max-w-3xl">
     <input
       v-model="titleText"
       type="text"
       placeholder="Enter Title"
-      class="input input-bordered w-full my-2"
+      class="my-2 w-full input input-bordered"
     />
     <div class="divider" />
     <textarea
       v-model="contentText"
       placeholder="Note"
-      class="textarea textarea-bordered textarea-lg w-full px-4"
+      class="px-4 w-full textarea textarea-bordered textarea-lg"
       rows="5"
       cols="6"
+      maxlength="240"
     />
-    <div class="flex justify-end gap-4 pt-4">
+    <p class="text-sm text-right">{{ contentLength }}/240</p>
+    <div class="flex gap-4 justify-end pt-4">
       <button
         @click="handleSubmit"
         :disabled="!titleText || !contentText"
