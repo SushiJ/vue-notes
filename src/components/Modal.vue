@@ -30,8 +30,12 @@ function closeModal() {
 </script>
 <template>
   <!-- The button to open modal -->
-  <div class="fixed inset-0 grid place-items-center bg-opacity-50 bg-gray-900">
-    <div class="bg-gray-800 rounded-md w-1/2 p-8 flex flex-col">
+  <div
+    class="fixed inset-0 grid place-items-center bg-opacity-50 bg-base-100 z-10"
+  >
+    <div
+      class="bg-base-100 rounded-md w-1/2 p-8 flex flex-col border-base-content border-[1px]"
+    >
       <div>
         <input
           v-model="noteTitle"
