@@ -1,5 +1,7 @@
 <script setup lang="ts">
 import { useNotesStore } from "@/store";
+import { ref } from "vue";
+import Modal from "./Modal.vue";
 
 interface Props {
   idx: number;
@@ -8,13 +10,16 @@ interface Props {
   title: string;
   content: string;
 }
-
-const props = defineProps<Props>();
 const store = useNotesStore();
-
 function handleDelete(id: string) {
   store.deleteNote(id);
 }
+let isModalOpen = ref<boolean>(false);
+function closeModal() {
+  isModalOpen.value = !isModalOpen.value;
+}
+
+const props = defineProps<Props>();
 </script>
 <template>
   <div class="py-4 w-96 h-auto shadow-2xl card">
@@ -45,13 +50,25 @@ function handleDelete(id: string) {
       </div>
     </div>
     <div class="justify-end px-4 card-actions">
-      <button class="shadow-xl btn btn-accent btn-outline">Edit</button>
+      <button
+        @click="isModalOpen = !isModalOpen"
+        class="shadow-xl btn btn-accent btn-outline"
+      >
+        Edit
+      </button>
       <button
         @click.prevent="handleDelete(props.id)"
         class="shadow-xl btn btn-error btn-outline"
       >
         Delete
       </button>
+      <Modal
+        v-if="isModalOpen"
+        :id="props.id"
+        :title="props.title"
+        :content="props.content"
+        @close-modal="closeModal"
+      />
     </div>
   </div>
 </template>

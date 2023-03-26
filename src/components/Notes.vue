@@ -63,8 +63,8 @@ watch(contentText, (oldContent) => {
   <div class="flex flex-wrap gap-4">
     <Card
       v-for="(note, idx) in store.notes"
-      :note="note"
       :key="note.id"
+      :note="note"
       :idx="idx + 1"
       :id="note.id"
       :createdAt="note.createdAt"
