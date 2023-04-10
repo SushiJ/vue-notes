@@ -61,8 +61,11 @@ export const useNotesStore = defineStore("storeNotes", {
       id: string;
     }) {
       const note = this.getNoteById(id);
-      note!.content = content;
-      note!.title = title;
+      if (!note) {
+        return;
+      }
+      note.content = content;
+      note.title = title;
     },
   },
 });
