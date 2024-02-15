@@ -2,6 +2,8 @@ package main
 
 import (
 	"encoding/json"
+	"fmt"
+	"io"
 	"net/http"
 	"time"
 
@@ -20,9 +22,10 @@ type Notes struct {
 func notesRoutes(r chi.Router) {
 	r.Get("/", getNotes)
 	r.Get("/{id}", getNotesById)
-	r.Post("/create", createNotes)
+	r.Post("/", createNotes)
 }
 
+// TODO: uuid, createdAt and updatedAt should be db thingy
 var notes = []Notes{
 	{Id: uuid.New(), Title: "First note", Content: "This is the first Note", CreatedAt: time.Now(), UpdatedAt: time.Now()},
 	{Id: uuid.New(), Title: "Second note", Content: "This is the second Note", CreatedAt: time.Now(), UpdatedAt: time.Now()},
@@ -50,8 +53,27 @@ func getNotesById(w http.ResponseWriter, r *http.Request) {
 }
 
 func createNotes(w http.ResponseWriter, r *http.Request) {
-	if r.Method != "POST" {
-		w.Header().Set("Allow", http.MethodPost)
-		http.Error(w, "Method not allow", http.StatusMethodNotAllowed)
+	defer r.Body.Close()
+
+	data, err := io.ReadAll(r.Body)
+	if err != nil {
+		panic(err)
 	}
+
+	var note Notes
+	if err := json.Unmarshal(data, &note); err != nil {
+		panic(err)
+	}
+
+	if err != nil {
+		panic(err)
+	}
+	note.Id = uuid.New()
+	note.CreatedAt = time.Now()
+	note.UpdatedAt = time.Now()
+
+	marshal, err := json.Marshal(note)
+
+	notes = append(notes, note)
+	fmt.Fprint(w, string(marshal))
 }

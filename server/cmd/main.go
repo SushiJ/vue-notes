@@ -13,13 +13,12 @@ func main() {
 	flag.Parse()
 
 	r := chi.NewRouter()
-	r.Get("/check", checkHealth)
+	r.Get("/check", func(w http.ResponseWriter, r *http.Request) {
+		w.Write([]byte("200"))
+	})
 
 	r.Route("/notes", notesRoutes)
 
 	log.Printf("Live at http://localhost%s", *addr)
 	log.Fatal((http.ListenAndServe(*addr, r)))
-}
-func checkHealth(w http.ResponseWriter, r *http.Request) {
-	w.Write([]byte("200"))
 }
