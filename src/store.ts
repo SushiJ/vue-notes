@@ -5,6 +5,7 @@ interface Data {
   title: string;
   content: string;
 }
+
 interface Note extends Data {
   id: string;
   createdAt: string;

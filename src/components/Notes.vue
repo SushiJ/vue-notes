@@ -10,6 +10,7 @@ function handleCancelClick() {
   titleText.value = "";
   contentText.value = "";
 }
+
 const store = useNotesStore();
 
 function handleSubmit() {
@@ -29,29 +30,14 @@ watch(contentText, (oldContent) => {
 </script>
 <template>
   <div class="mx-auto w-full max-w-3xl">
-    <input
-      v-model="titleText"
-      type="text"
-      placeholder="Enter Title"
-      class="my-2 w-full input input-bordered"
-    />
+    <input v-model="titleText" type="text" placeholder="Enter Title" class="my-2 w-full input input-bordered" />
     <div class="divider" />
-    <textarea
-      v-model="contentText"
-      placeholder="Note"
-      class="px-4 w-full textarea textarea-bordered textarea-lg"
-      rows="5"
-      cols="6"
-      maxlength="240"
-    />
+    <textarea v-model="contentText" placeholder="Note" class="px-4 w-full textarea textarea-bordered textarea-lg" rows="5"
+      cols="6" maxlength="240" />
     <p class="text-sm text-right">{{ contentLength }}/240</p>
     <div class="flex gap-4 justify-end pt-4">
-      <button
-        @click="handleSubmit"
-        :disabled="!titleText || !contentText"
-        type="submit"
-        class="btn btn-accent btn-outline"
-      >
+      <button @click="handleSubmit" :disabled="!titleText || !contentText" type="submit"
+        class="btn btn-accent btn-outline">
         Submit
       </button>
       <button @click="handleCancelClick" class="btn btn-ghost btn-outline">
@@ -61,15 +47,7 @@ watch(contentText, (oldContent) => {
   </div>
   <div class="divider" />
   <div class="flex flex-wrap gap-4">
-    <Card
-      v-for="(note, idx) in store.notes"
-      :key="note.id"
-      :note="note"
-      :idx="idx + 1"
-      :id="note.id"
-      :createdAt="note.createdAt"
-      :title="note.title"
-      :content="note.content"
-    />
+    <Card v-for="(note, idx) in store.notes" :key="note.id" :note="note" :idx="idx + 1" :id="note.id"
+      :createdAt="note.createdAt" :title="note.title" :content="note.content" />
   </div>
 </template>
