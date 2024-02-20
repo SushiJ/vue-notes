@@ -50,25 +50,13 @@ const props = defineProps<Props>();
       </div>
     </div>
     <div class="justify-end px-4 card-actions">
-      <button
-        @click="isModalOpen = !isModalOpen"
-        class="shadow-xl btn btn-accent btn-outline"
-      >
+      <button @click="isModalOpen = !isModalOpen" class="shadow-xl btn btn-accent btn-outline">
         Edit
       </button>
-      <button
-        @click.prevent="handleDelete(props.id)"
-        class="shadow-xl btn btn-error btn-outline"
-      >
+      <button @click.prevent="handleDelete(props.id)" class="shadow-xl btn btn-error btn-outline">
         Delete
       </button>
-      <Modal
-        v-if="isModalOpen"
-        :id="props.id"
-        :title="props.title"
-        :content="props.content"
-        @close-modal="closeModal"
-      />
+      <Modal v-if="isModalOpen" :id="props.id" :title="props.title" :content="props.content" @close-modal="closeModal" />
     </div>
   </div>
 </template>

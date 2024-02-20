@@ -1,7 +1,8 @@
 <script setup lang="ts">
-import { ref, watch } from "vue";
+import { onMounted, ref, watch } from "vue";
 import Card from "@/components/Card.vue";
 import { useNotesStore } from "@/store";
+import { storeToRefs } from "pinia";
 
 let titleText = ref<string>("");
 let contentText = ref<string>("");
@@ -12,15 +13,18 @@ function handleCancelClick() {
 }
 
 const store = useNotesStore();
+const { notes } = storeToRefs(store);
 
 function handleSubmit() {
   const noteData = {
     title: titleText.value,
     content: contentText.value,
   };
-  store.addNote(noteData);
+  store.createNote(noteData);
   handleCancelClick();
 }
+
+onMounted(() => store.fetchNotes());
 
 const contentLength = ref<number>(0);
 
@@ -47,7 +51,7 @@ watch(contentText, (oldContent) => {
   </div>
   <div class="divider" />
   <div class="flex flex-wrap gap-4">
-    <Card v-for="(note, idx) in store.notes" :key="note.id" :note="note" :idx="idx + 1" :id="note.id"
-      :createdAt="note.createdAt" :title="note.title" :content="note.content" />
+    <Card v-for="(note, idx) in notes" :key="note.Id" :note="note" :idx="idx + 1" :id="note.Id"
+      :createdAt="note.CreatedAt" :title="note.Title" :content="note.Content" />
   </div>
 </template>

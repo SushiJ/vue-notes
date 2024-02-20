@@ -1,72 +1,54 @@
 import { defineStore } from "pinia";
-import { v4 as uuid } from "uuid";
+import { ref } from "vue";
+import { useRouter } from "vue-router";
 
-interface Data {
-  title: string;
-  content: string;
-}
+type Data = {
+  Title: string;
+  Content: string;
+};
 
 interface Note extends Data {
-  id: string;
-  createdAt: string;
+  Id: string;
+  CreatedAt: string;
 }
 
-const initialValue: Note[] = [
-  {
-    id: uuid(),
-    createdAt: "2023-02-19T10:34:31.233Z",
-    title: "Test title 1",
-    content:
-      "Lorem Ipsum blah blah Lorem ipsum dolor sit amet, qui minim labore adipisicing minim sint cillum sint consectetur cupidatat.",
-  },
-  {
-    id: uuid(),
-    createdAt: new Date().toISOString(),
-    title: "Test title 2",
-    content:
-      "qui QUI PASA? minim labore adipisicing minim sint cillum sint consectetur cupidatat.",
-  },
-];
+export const useNotesStore = defineStore("NotesStore", () => {
+  const notes = ref<Array<Note> | null>(null);
 
-export const useNotesStore = defineStore("storeNotes", {
-  state: () => {
-    return {
-      notes: initialValue,
-    };
-  },
-  getters: {
-    getNoteById: (state) => {
-      return (id: string) => state.notes.find((note) => note.id === id);
-    },
-  },
-  actions: {
-    addNote(data: Data) {
-      const note = {
-        id: uuid(),
-        createdAt: new Date().toISOString(),
-        title: data.title,
-        content: data.content,
-      };
-      this.notes = [...this.notes, note];
-    },
-    deleteNote(id: string) {
-      this.notes = this.notes.filter((note) => note.id !== id);
-    },
-    editNote({
-      title,
-      content,
-      id,
-    }: {
-      title: string;
-      content: string;
-      id: string;
-    }) {
-      const note = this.getNoteById(id);
-      if (!note) {
-        return;
-      }
-      note.content = content;
-      note.title = title;
-    },
-  },
+  function fetchNotes() {
+    fetch("http://localhost:4000/notes")
+      .then((resp) =>
+        resp.json().then((data) => {
+          notes.value = data;
+        }),
+      )
+      .catch((e) => console.log(e));
+  }
+  function createNote(data: { title: string; content: string }) {
+    fetch("http://localhost:4000/notes", {
+      method: "POST",
+      body: JSON.stringify(data),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+      .then((resp) => resp.json().then((data) => notes.value?.push(data)))
+      .catch((e) => console.log(e));
+  }
+  function editNote(note: { title: string; content: string; id: string }) {
+    fetch(`http://localhost:4000/notes/${note.id}`, {
+      method: "PUT",
+      body: JSON.stringify(note),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+  }
+  function deleteNote(id: string) {
+    fetch(`http://localhost:4000/notes/${id}`, {
+      method: "DELETE",
+    });
+  }
+
+  return { notes, fetchNotes, createNote, editNote, deleteNote };
 });
