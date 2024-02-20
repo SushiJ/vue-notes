@@ -9,6 +9,7 @@ import (
 
 	"github.com/go-chi/chi/v5"
 	_ "github.com/mattn/go-sqlite3"
+	"github.com/rs/cors"
 	"github.com/sushij/vue-notes/server/internals/models"
 )
 
@@ -57,8 +58,10 @@ func main() {
 
 	r.Route("/notes", app.routes)
 
+	handler := cors.Default().Handler(r)
+
 	infoLog.Printf("Live at http://localhost%s", *addr)
-	errorLog.Fatal((http.ListenAndServe(*addr, r)))
+	errorLog.Fatal((http.ListenAndServe(*addr, handler)))
 }
 
 func openDB(dsn string) (*sql.DB, error) {
