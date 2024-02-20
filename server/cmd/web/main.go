@@ -34,15 +34,7 @@ func main() {
 		errorLog.Fatal(err)
 	}
 
-	stmt := `CREATE TABLE IF NOT EXISTS notes (
-    id TEXT NOT NULL PRIMARY KEY,
-    title TEXT,
-    content TEXT,
-    created_at DATETIME default CURRENT_TIMESTAMP,
-    updated_at DATETIME default CURRENT_TIMESTAMP
-    );`
-
-	if _, err := db.Exec(stmt); err != nil {
+	if err := seedDb(db); err != nil {
 		errorLog.Fatal(err)
 		return
 	}
@@ -58,7 +50,7 @@ func main() {
 
 	r.Route("/notes", app.routes)
 
-	handler := cors.Default().Handler(r)
+	handler := cors.AllowAll().Handler(r)
 
 	infoLog.Printf("Live at http://localhost%s", *addr)
 	errorLog.Fatal((http.ListenAndServe(*addr, handler)))
@@ -73,4 +65,18 @@ func openDB(dsn string) (*sql.DB, error) {
 		return nil, err
 	}
 	return db, nil
+}
+
+func seedDb(db *sql.DB) error {
+
+	stmt := `CREATE TABLE IF NOT EXISTS notes (
+    id TEXT NOT NULL PRIMARY KEY,
+    title TEXT,
+    content TEXT,
+    created_at DATETIME default CURRENT_TIMESTAMP,
+    updated_at DATETIME default CURRENT_TIMESTAMP
+    );`
+
+	_, err := db.Exec(stmt)
+	return err
 }

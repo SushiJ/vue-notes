@@ -74,3 +74,33 @@ func (m *NoteModel) GetAll() ([]*Note, error) {
 
 	return notes, nil
 }
+
+func (m *NoteModel) Delete(id uuid.UUID) error {
+	stmt := `DELETE FROM notes WHERE id=?`
+	row, err := m.DB.Exec(stmt, id)
+	if err != nil {
+		return err
+	}
+
+	_, err = row.RowsAffected()
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *NoteModel) Update(id uuid.UUID, title, content string) (int64, error) {
+	stmt := `UPDATE notes SET title = ?, content = ? WHERE id = ?`
+	row, err := m.DB.Exec(stmt, title, content, id)
+	if err != nil {
+		return 0, err
+	}
+
+	rowsAffected, err := row.RowsAffected()
+	if err != nil {
+		return 0, err
+	}
+
+	return rowsAffected, nil
+}
