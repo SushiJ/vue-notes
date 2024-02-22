@@ -25,7 +25,7 @@ func (app *application) getNotes(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if len(notes) == 0 {
-		fmt.Fprint(w, []byte("No notes found"))
+		fmt.Fprint(w, string("No notes found"))
 		return
 	}
 
@@ -74,8 +74,6 @@ func (app *application) createNotes(w http.ResponseWriter, r *http.Request) {
 
 	note.Id = uuid.New()
 
-	fmt.Println(fmt.Sprintf("%+v", note))
-
 	if err := app.notes.Insert(note.Id, note.Title, note.Content); err != nil {
 		fmt.Printf("%+v", err)
 		app.errorLog.Print(w, err)
@@ -87,6 +85,8 @@ func (app *application) createNotes(w http.ResponseWriter, r *http.Request) {
 		app.errorLog.Print(w, err)
 		return
 	}
+
+	fmt.Println(fmt.Sprintf("%+v", string(marshal)))
 
 	fmt.Fprint(w, string(marshal))
 }

@@ -1,6 +1,5 @@
 import { defineStore } from "pinia";
 import { ref } from "vue";
-import { useRouter } from "vue-router";
 
 type Data = {
   Title: string;
@@ -33,7 +32,17 @@ export const useNotesStore = defineStore("NotesStore", () => {
         "Content-Type": "application/json",
       },
     })
-      .then((resp) => resp.json().then((data) => notes.value?.push(data)))
+      .then((resp) => resp.json())
+      .then((d) => {
+        const note = {};
+
+        note.Id = d.id;
+        note.Title = d.title;
+        note.Content = d.content;
+        note.CreatedAt = new Date().toUTCString();
+
+        notes.value.push(note);
+      })
       .catch((e) => console.log(e));
   }
 
@@ -53,7 +62,10 @@ export const useNotesStore = defineStore("NotesStore", () => {
     fetch(`http://localhost:4000/notes/${id}`, {
       method: "DELETE",
     })
-      .then(fetchNotes)
+      .then(() => {
+        notes.value = notes.value?.filter((note) => note.Id !== id)!;
+        fetchNotes();
+      })
       .catch((e) => console.log(e));
   }
 
