@@ -24,6 +24,7 @@ export const useNotesStore = defineStore("NotesStore", () => {
       )
       .catch((e) => console.log(e));
   }
+
   function createNote(data: { title: string; content: string }) {
     fetch("http://localhost:4000/notes", {
       method: "POST",
@@ -35,6 +36,7 @@ export const useNotesStore = defineStore("NotesStore", () => {
       .then((resp) => resp.json().then((data) => notes.value?.push(data)))
       .catch((e) => console.log(e));
   }
+
   function editNote(note: { title: string; content: string; id: string }) {
     fetch(`http://localhost:4000/notes/${note.id}`, {
       method: "PUT",
@@ -42,12 +44,17 @@ export const useNotesStore = defineStore("NotesStore", () => {
       headers: {
         "Content-Type": "application/json",
       },
-    });
+    })
+      .then(fetchNotes)
+      .catch((e) => console.log(e));
   }
+
   function deleteNote(id: string) {
     fetch(`http://localhost:4000/notes/${id}`, {
       method: "DELETE",
-    });
+    })
+      .then(fetchNotes)
+      .catch((e) => console.log(e));
   }
 
   return { notes, fetchNotes, createNote, editNote, deleteNote };

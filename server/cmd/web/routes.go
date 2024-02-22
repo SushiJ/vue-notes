@@ -6,6 +6,6 @@ func (app *application) routes(r chi.Router) {
 	r.Get("/", app.getNotes)
 	r.Post("/", app.createNotes)
 	r.Get("/{id}", app.getNotesById)
-	r.Delete("/{id}", app.getNotesById)
+	r.Delete("/{id}", app.deleteNoteById)
 	r.Put("/{id}", app.updateNote)
 }
