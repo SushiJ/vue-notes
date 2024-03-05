@@ -43,7 +43,7 @@ func (app *application) getNotesById(w http.ResponseWriter, r *http.Request) {
 	id, err := uuid.Parse(idParam)
 	if err != nil {
 		app.errorLog.Print(w, err)
-		// http.Error(w, "Invalid ID", http.StatusBadRequest)
+		http.Error(w, "Invalid ID", http.StatusBadRequest)
 		return
 	}
 
@@ -69,6 +69,11 @@ func (app *application) createNotes(w http.ResponseWriter, r *http.Request) {
 
 	if err := json.Unmarshal(data, &note); err != nil {
 		app.errorLog.Print(err)
+		return
+	}
+
+	if len(note.Title) == 0 || len(note.Content) == 0 {
+		fmt.Fprint(w, http.StatusBadRequest)
 		return
 	}
 
@@ -110,6 +115,11 @@ func (app *application) updateNote(w http.ResponseWriter, r *http.Request) {
 	var note Notes
 	if err := json.Unmarshal(data, &note); err != nil {
 		app.errorLog.Print(err)
+		return
+	}
+
+	if len(note.Title) == 0 || len(note.Content) == 0 {
+		fmt.Fprint(w, http.StatusBadRequest)
 		return
 	}
 
